@@ -14,34 +14,41 @@ import { AdminModule } from './modules/admin.js';
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Sistema Revvo Milk Iniciando...');
 
-    // 1. Carregar Configs
+    // 1. Carregar Configurações e Auth
     store.state.config = await DataService.getConfig();
-    
-    // 2. Auth
     await AuthService.init();
 
-    // 3. Inicializar Módulos
+    // 2. Inicializar Módulos de Dados (Async)
     try {
+        uiUtils.toggleLoading(true); // Bloqueia tela enquanto carrega
+        
         await Promise.all([
             ProductsModule.init(),
-            SalesModule.loadHistory(),
+            SalesModule.loadHistory(), // Carrega dados, mas não liga eventos ainda
             OrdersModule.init(),
             ExpensesModule.init()
         ]);
         
+        // 3. Inicializar Lógica de UI e Eventos (Sync)
+        // AQUI ESTAVA O ERRO: Faltava iniciar o SalesModule para ligar os botões
+        SalesModule.init(); 
+        
         CartModule.init();
         AdminModule.init();
         uiUtils.bindPasswordModal();
-        Shortcuts.init(); // Inicia os atalhos de teclado (F2, F4, ESC)
+        Shortcuts.init();
 
-        // Data Topo
+        // 4. Interface Final
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR');
-        
         setupTabs();
+        
+        console.log('Sistema Pronto!');
 
     } catch (error) {
-        console.error(error);
+        console.error("Erro fatal:", error);
         uiUtils.notify('Erro ao carregar sistema', 'error');
+    } finally {
+        uiUtils.toggleLoading(false);
     }
 });
 
@@ -57,7 +64,6 @@ function setupTabs() {
             const id = nav.dataset.tab;
             document.getElementById(`${id}-tab`).classList.add('active');
             
-            // Refreshes específicos
             if(id === 'historico') SalesModule.renderHistory();
             if(id === 'despesas') ExpensesModule.renderList();
         });
