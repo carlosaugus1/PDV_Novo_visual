@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PDV Açaí da Serra</title>
-    <link rel="icon" href="image/Icoacaidaserra.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDV Revvo Milk</title>
+    <link rel="icon" href="image/Icoacaidaserra.ico">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -12,38 +12,44 @@
 </head>
 <body>
 
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-box">
+            <div class="brand-login">
+                <img src="image/acaidaserra.png" alt="Logo" style="height: 80px; margin-bottom: 10px;">
+                <h2>Acesso ao Sistema</h2>
+            </div>
+            <form id="system-login-form">
+                <input type="text" id="sys-user" class="input-modern" placeholder="Usuário" required>
+                <input type="password" id="sys-password" class="input-modern" placeholder="Senha" required>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px; font-size: 0.9rem; color: #555;">
+                    <input type="checkbox" id="remember-me" style="width: auto; margin: 0;">
+                    <label for="remember-me" style="cursor: pointer;">Lembrar de mim</label>
+                </div>
+                <button type="submit" class="btn-main">ENTRAR</button>
+            </form>
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="suporte.html" target="_blank" class="forgot-pass-link">Esqueci a senha / Suporte</a>
+            </div>
+        </div>
+    </div>
+
     <aside class="sidebar">
         <div class="brand">
             <img src="image/acaidaserra.png" alt="Logo" class="brand-logo">
         </div>
         <nav class="nav-menu">
-            <a href="#" class="nav-item active" data-tab="venda">
-                <span class="icon">🛒</span> <span>Venda</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="produtos">
-                <span class="icon">🍦</span> <span>Produtos</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="comandas">
-                <span class="icon">📋</span> <span>Comandas</span>
-                <span class="badge" id="open-orders-count" style="display: none;">0</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="historico">
-                <span class="icon">📜</span> <span>Histórico</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="despesas">
-                <span class="icon">💸</span> <span>Despesas</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="admin" style="margin-top: auto;">
-                <span class="icon">⚙️</span> <span>Admin</span>
-            </a>
+            <a href="#" class="nav-item active" data-tab="venda">🛒 <span>Venda</span></a>
+            <a href="#" class="nav-item" data-tab="produtos">🍦 <span>Produtos</span></a>
+            <a href="#" class="nav-item" data-tab="comandas">📋 <span>Comandas</span> <span class="badge" id="open-orders-count" style="display:none;">0</span></a>
+            <a href="#" class="nav-item" data-tab="historico">📜 <span>Histórico</span></a>
+            <a href="#" class="nav-item" data-tab="despesas">💸 <span>Despesas</span></a>
+            <a href="#" class="nav-item" data-tab="admin" style="margin-top: auto;">⚙️ <span>Admin</span></a>
         </nav>
     </aside>
 
     <main class="main-content">
         <header class="top-bar">
-            <div class="page-info">
-                <h2 id="page-title">Nova Venda</h2>
-            </div>
+            <div class="page-info"><h2 id="page-title">Nova Venda</h2></div>
             <div class="current-date" id="current-date">--/--/----</div>
         </header>
 
@@ -52,9 +58,13 @@
             <div id="venda-tab" class="tab-pane active">
                 <div class="pos-layout">
                     <div class="pos-left">
-                        
                         <div id="discount-balloon" style="display: none; background: #FFF9C4; color: #FBC02D; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-weight: bold; align-items: center; gap: 10px;">
                             <span>🎉</span> <span id="discount-details">Promoção Ativa!</span>
+                        </div>
+                        
+                        <div id="edit-mode-bar" style="display: none; background: var(--primary-light); color: white; padding: 10px; border-radius: 12px; margin-bottom: 15px; justify-content: space-between; align-items: center;">
+                            <span>✏️ Editando: <strong><span id="edit-mode-name"></span></strong></span>
+                            <button id="cancel-edit-mode" style="background: rgba(0,0,0,0.2); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Cancelar</button>
                         </div>
 
                         <div class="card">
@@ -62,77 +72,71 @@
                                 <h3>Pesagem</h3>
                                 <div class="price-tag">R$ <span id="weighted-product-price-display">0.00</span>/kg</div>
                             </div>
-
                             <div class="type-selector">
                                 <div class="type-btn active" data-type="acai">
-                                    <img src="image/acai.png" alt="Açaí">
-                                    <span>Açaí</span>
+                                    <img src="image/acai.png" alt="Açaí"><span>Açaí</span>
                                 </div>
                                 <div class="type-btn" data-type="sorvete">
-                                    <img src="image/sorvete.png" alt="Sorvete">
-                                    <span>Sorvete</span>
+                                    <img src="image/sorvete.png" alt="Sorvete"><span>Sorvete</span>
                                 </div>
                             </div>
-
                             <div class="weight-wrapper">
                                 <input type="number" id="weight-input" class="big-input" placeholder="0g">
                                 <button id="add-to-cart" class="add-btn">+</button>
                             </div>
-                            <div style="text-align: right; color: var(--text-light); font-size: 0.9rem;">
-                                Valor Calculado: <strong>R$ <span id="calculated-price">0.00</span></strong>
-                            </div>
+                            <div style="text-align: right; color: var(--text-light);">Valor: <strong>R$ <span id="calculated-price">0.00</span></strong></div>
                         </div>
 
-                        <div class="card" style="margin-top: 20px;">
+                        <div class="card">
                             <h3>Adicionais Rápidos</h3>
-                            <div class="quick-add-container quick-add-buttons">
-                                </div>
+                            <div class="quick-add-container" id="quick-add-wrapper"></div>
                         </div>
                     </div>
 
                     <div class="cart-area">
                         <div class="card cart-container">
-                            <div class="cart-header-row">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
                                 <h3>Carrinho</h3>
-                                <div class="delivery-switch" id="delivery-mode-selector">
+                                <div class="delivery-switch">
                                     <button class="toggle-btn active" data-mode="balcao">🏪 Balcão</button>
                                     <button class="toggle-btn" data-mode="entrega">🛵 Entrega</button>
                                 </div>
                             </div>
 
-                            <div id="delivery-info-section" style="display: none; margin-bottom: 15px; animation: fadeIn 0.3s;">
-                                <input type="text" id="delivery-customer-name" class="input-modern" placeholder="Nome do Cliente" style="margin-bottom: 8px;">
-                                <input type="text" id="delivery-customer-address" class="input-modern" placeholder="Endereço" style="margin-bottom: 8px;">
+                            <div id="delivery-info-section" style="display: none; margin-bottom: 15px;">
+                                <input type="text" id="delivery-customer-name" class="input-modern" placeholder="Nome do Cliente">
+                                <input type="text" id="delivery-customer-address" class="input-modern" placeholder="Endereço Completo">
                                 <input type="number" id="delivery-fee" class="input-modern" placeholder="Taxa de Entrega (R$)">
                             </div>
 
-                            <div class="cart-list" id="cart-items">
-                                <div style="text-align:center; padding: 20px; color: #999;">Carrinho vazio 🛒</div>
-                            </div>
+                            <div class="cart-list" id="cart-items"></div>
 
                             <div class="cart-footer">
-                                <div class="totals-row"><span>Subtotal</span> <span id="subtotal">R$ 0,00</span></div>
+                                <div style="display:flex; justify-content:space-between; color:var(--text-light);"><span>Subtotal</span> <span id="subtotal">R$ 0,00</span></div>
                                 <div class="totals-final"><span>Total</span> <span id="total">R$ 0,00</span></div>
 
-                                <div class="payment-grid">
-                                    <div class="pay-opt" data-method="cash">💵 Dinheiro</div>
-                                    <div class="pay-opt" data-method="card">💳 Cartão</div>
-                                    <div class="pay-opt" data-method="pix">💠 PIX</div>
-                                </div>
-
-                                <div id="cash-input" style="display: none; margin-bottom: 15px;">
-                                    <input type="number" id="cash-received" class="input-modern" placeholder="Valor Recebido (R$)">
-                                    <div style="margin-top: 5px; color: var(--accent-hover); font-weight: bold;">Troco: R$ <span id="change-amount">0.00</span></div>
-                                </div>
-
-                                <div class="action-grid">
-                                    <button id="finish-sale" class="btn-main" style="grid-column: span 2;">FINALIZAR</button>
-                                    <button id="confirm-payment" class="btn-main" style="grid-column: span 2; display: none; background: var(--accent);">CONFIRMAR PGTO</button>
-                                    
-                                    <div style="grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                        <button id="hold-sale" class="btn-sec">⏳ Pendurar</button>
-                                        <button id="cancel-sale" class="btn-sec" style="color: var(--danger); border-color: var(--danger);">✕ Cancelar</button>
+                                <div id="pre-payment-actions">
+                                    <button id="finish-sale" class="btn-main">FINALIZAR VENDA</button>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                                        <button id="hold-sale" class="btn-sec">⏳ Pendurar / Salvar</button>
+                                        <button id="cancel-sale" class="btn-sec" style="color:var(--danger); border-color:var(--danger);">✕ Cancelar</button>
                                     </div>
+                                </div>
+
+                                <div id="payment-section" style="display: none;">
+                                    <div class="payment-grid" id="main-payment-options">
+                                        <div class="pay-opt" data-method="cash"><span>💵</span> Dinheiro</div>
+                                        <div class="pay-opt" data-method="card"><span>💳</span> Cartão</div>
+                                        <div class="pay-opt" data-method="pix"><span>💠</span> PIX</div>
+                                    </div>
+                                    
+                                    <div id="cash-input" style="display: none; margin-bottom: 10px;">
+                                        <input type="number" id="cash-received" class="input-modern" placeholder="Valor Recebido (R$)">
+                                        <div style="color:var(--accent-hover); font-weight:bold; text-align:right;">Troco: R$ <span id="change-amount">0.00</span></div>
+                                    </div>
+
+                                    <button id="confirm-payment" class="btn-main" style="background: var(--accent);">CONFIRMAR E IMPRIMIR</button>
+                                    <button id="back-to-cart" class="btn-sec" style="width:100%; margin-top:10px;">Voltar</button>
                                 </div>
                             </div>
                         </div>
@@ -142,11 +146,13 @@
 
             <div id="produtos-tab" class="tab-pane">
                 <div class="card">
-                    <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-                        <h3>Catálogo</h3>
-                        <input type="search" id="product-search" class="input-modern" placeholder="🔍 Buscar..." style="width: 250px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                        <h3>Catálogo de Produtos</h3>
+                        <div style="display:flex; gap:10px;">
+                             <input type="search" id="product-search" class="input-modern" placeholder="🔍 Buscar..." style="width: 200px; margin-bottom:0;">
+                             <button id="btn-open-add-prod" class="btn-sec" style="background:var(--primary); color:white; border:none;">+ Novo</button>
+                        </div>
                     </div>
-                    <div id="products-categories-list" style="display:flex; gap:10px; margin-bottom:15px; overflow-x:auto;"></div>
                     <div class="product-grid" id="products-grid"></div>
                 </div>
             </div>
@@ -160,103 +166,78 @@
 
             <div id="historico-tab" class="tab-pane">
                 <div class="card">
-                    <div class="history-controls">
-                        <h3>Histórico</h3>
-                        <input type="date" id="history-date" class="input-modern" style="width: auto;">
-                        <button id="export-history-pdf" class="btn-sec" style="padding: 8px 15px;">🖨️ PDF</button>
-                        <button id="add-manual-sale-btn" class="btn-sec" style="padding: 8px 15px; border-color: var(--primary); color: var(--primary);">+ Manual</button>
+                    <div style="display:flex; gap:10px; margin-bottom: 20px; align-items:center;">
+                        <h3>Vendas do Dia</h3>
+                        <input type="date" id="history-date" class="input-modern" style="width: auto; margin:0;">
+                        <button id="export-daily-pdf" class="btn-sec">🖨️ Relatório Diário</button>
                     </div>
-                    
                     <div class="history-list" id="sales-history"></div>
-
-                    <div id="history-summary" style="margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 12px; display: none;">
-                        <div style="display:flex; justify-content:space-between;"><span>Vendas:</span> <strong id="history-products-total">R$ 0.00</strong></div>
-                        <div style="display:flex; justify-content:space-between; color: var(--danger);"><span>Despesas:</span> <strong id="history-expenses-total">R$ 0.00</strong></div>
-                        <div style="display:flex; justify-content:space-between; font-size: 1.2rem; margin-top: 10px; border-top: 1px solid #ddd; padding-top: 5px;"><span>Saldo:</span> <strong id="history-grand-total">R$ 0.00</strong></div>
+                    <div style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 12px; text-align: right;">
+                        <div style="font-size: 1.2rem;">Total Vendas: <strong id="history-grand-total">R$ 0.00</strong></div>
                     </div>
                 </div>
             </div>
 
             <div id="despesas-tab" class="tab-pane">
-                <div class="card" style="margin-bottom: 20px;">
+                <div class="card">
                     <h3>Lançar Despesa</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-top: 15px;">
                         <input type="text" id="new-expense-name" class="input-modern" placeholder="Motivo">
                         <input type="text" id="new-expense-desc" class="input-modern" placeholder="Detalhes">
                         <input type="number" id="new-expense-value" class="input-modern" placeholder="Valor R$">
-                        <button id="add-new-expense-btn" class="btn-main" style="background: var(--danger); box-shadow: none;">Lançar</button>
+                        <button id="add-new-expense-btn" class="btn-main" style="background: var(--danger); margin-top:0;">Lançar</button>
                     </div>
-                </div>
-                <div class="card">
-                    <h3>Histórico Despesas</h3>
-                    <input type="date" id="expense-date" class="input-modern" style="margin: 15px 0; width: auto;">
-                    <div id="expenses-history-list"></div>
-                    <div style="margin-top: 15px; text-align: right; color: var(--danger); font-weight: bold; font-size: 1.2rem;">Total: <span id="expenses-total-today">R$ 0.00</span></div>
+                    <h3 style="margin-top:30px;">Histórico Despesas</h3>
+                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                        <input type="date" id="expense-date" class="input-modern" style="width: auto;">
+                        <button id="export-expenses-pdf" class="btn-sec">📄 PDF</button>
+                    </div>
+                    <div id="expenses-history-list" style="margin-top:10px;"></div>
+                    <div style="text-align: right; color: var(--danger); font-weight: bold; font-size: 1.2rem; margin-top:10px;">Total: <span id="expenses-total-today">R$ 0.00</span></div>
                 </div>
             </div>
-            
+
             <div id="admin-tab" class="tab-pane">
-                 <div class="card" style="margin-bottom: 20px; border: 2px solid #FFC107; background: #FFFDE7;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                         <h3 style="color: #F57F17;">⚡ Configurar Promoção</h3>
-                         <label class="switch"><input type="checkbox" id="discount-active-check"><span class="slider round"></span></label>
+                 <div class="card promo-card">
+                    <div class="switch-wrapper">
+                         <h3 style="flex:1; color: #F57F17;">⚡ Configurar Promoção</h3>
+                         <label class="toggle-switch">
+                            <input type="checkbox" id="discount-active-check">
+                            <span class="slider"></span>
+                         </label>
                     </div>
-                    <div id="discount-config-area" style="margin-top: 15px; opacity: 0.5; pointer-events: none;">
-                        <div style="display:flex; gap: 20px; align-items: center;">
-                            <input type="number" id="discount-percentage" class="input-modern" value="10" style="width: 80px;">
-                            <span>% OFF em:</span>
-                            <label><input type="checkbox" id="discount-target-acai"> Açaí</label>
-                            <label><input type="checkbox" id="discount-target-sorvete"> Sorvete</label>
-                            <button id="save-discount-config" class="btn-sec" style="margin-left: auto;">Salvar</button>
-                        </div>
+                    <div id="discount-config-area" style="opacity: 0.5; pointer-events: none; display:flex; gap:15px; align-items:center;">
+                        <input type="number" id="discount-percentage" class="input-modern" value="10" style="width: 80px; margin:0;">
+                        <span>% OFF em:</span>
+                        <label><input type="checkbox" id="discount-target-acai"> Açaí</label>
+                        <label><input type="checkbox" id="discount-target-sorvete"> Sorvete</label>
+                        <button id="save-discount-config" class="btn-sec" style="margin-left:auto;">Salvar</button>
                     </div>
                  </div>
 
-                 <div class="card">
-                     <div id="login-section">
-                         <h3>Login Admin</h3>
-                         <div style="max-width: 300px; margin: 20px auto;">
-                             <input type="text" id="username" class="input-modern" placeholder="Usuário" style="margin-bottom: 10px;">
-                             <input type="password" id="password" class="input-modern" placeholder="Senha" style="margin-bottom: 10px;">
-                             <button id="login-btn" class="btn-main" style="width: 100%;">Entrar</button>
-                         </div>
-                     </div>
-                     <div id="admin-controls-panel" style="display: none;">
+                 <div class="card" style="margin-top:20px;">
+                     <div id="admin-controls-panel">
                          <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                             <span>Logado como: <strong id="logged-user">Admin</strong></span>
-                             <button id="logout-btn" class="btn-sec">Sair</button>
+                             <span>Painel Administrativo</span>
+                             <button id="logout-btn" class="btn-sec" style="color:var(--danger); border-color:var(--danger);">Sair do Sistema</button>
                          </div>
-                         
-                         <div style="display: flex; gap: 10px; border-bottom: 1px solid #eee; margin-bottom: 20px;">
-                             <div class="admin-sub-tab active" data-subtab="produtos" style="padding: 10px; cursor: pointer; color: var(--primary); font-weight: bold; border-bottom: 2px solid var(--primary);">Produtos</div>
-                             <div class="admin-sub-tab" data-subtab="relatorios" style="padding: 10px; cursor: pointer;">Relatórios</div>
-                             <div class="admin-sub-tab" data-subtab="config" style="padding: 10px; cursor: pointer;">Segurança</div>
-                         </div>
-                         
-                         <div id="admin-produtos-content" class="admin-sub-content active">
-                             <h4>Preços Base</h4>
-                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                                 <div><label>Açaí</label><input type="number" id="acai-price" class="input-modern"><button id="update-acai-price" class="btn-sec" style="margin-top: 5px; width:100%;">Salvar</button></div>
-                                 <div><label>Sorvete</label><input type="number" id="sorvete-price" class="input-modern"><button id="update-sorvete-price" class="btn-sec" style="margin-top: 5px; width:100%;">Salvar</button></div>
+                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                             <div>
+                                 <h4>Preços Base (KG)</h4>
+                                 <label>Açaí R$</label>
+                                 <input type="number" id="admin-acai-price" class="input-modern">
+                                 <label>Sorvete R$</label>
+                                 <input type="number" id="admin-sorvete-price" class="input-modern">
+                                 <button id="save-base-prices" class="btn-main">Atualizar Preços</button>
+                                 
+                                 <h4 style="margin-top:20px;">Relatórios</h4>
+                                 <input type="month" id="report-month-select" class="input-modern">
+                                 <button id="generate-monthly-report" class="btn-sec" style="width:100%;">📄 Gerar PDF Mensal</button>
                              </div>
-                             <h4>Novo Produto</h4>
-                             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px;">
-                                 <input id="new-product-name" class="input-modern" placeholder="Nome">
-                                 <input id="new-product-price" class="input-modern" placeholder="Preço">
-                                 <input id="new-product-category" class="input-modern" placeholder="Categ.">
-                                 <button id="add-new-product-btn" class="btn-main">Add</button>
+                             <div>
+                                 <h4>Log de Atividades</h4>
+                                 <div class="log-container" id="system-log-container"></div>
                              </div>
-                             <div id="products-management" style="margin-top: 20px;"></div>
-                         </div>
-                         
-                         <div id="admin-relatorios-content" class="admin-sub-content" style="display: none;">
-                             <input type="month" id="report-month-select" class="input-modern">
-                             <button id="generate-monthly-report-pdf" class="btn-main" style="margin-top: 10px;">Gerar PDF</button>
-                         </div>
-                         
-                         <div id="admin-config-content" class="admin-sub-content" style="display: none;">
-                             <input type="password" id="delete-password" class="input-modern" placeholder="Nova Senha Exclusão">
-                             <button id="update-delete-password" class="btn-main" style="margin-top: 10px;">Atualizar</button>
                          </div>
                      </div>
                  </div>
@@ -265,91 +246,107 @@
         </div>
     </main>
 
-    <div id="notification" class="toast">
-        <span class="toast-icon">🔔</span>
-        <span class="toast-msg">Mensagem</span>
+    <div id="notification" class="toast"><span class="toast-msg">Msg</span></div>
+
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="prod-modal-title">Novo Produto</h3>
+            <input type="hidden" id="prod-id">
+            <input id="prod-name" class="input-modern" placeholder="Nome do Produto">
+            <input id="prod-price" type="number" class="input-modern" placeholder="Preço (R$)">
+            <select id="prod-category-select" class="input-modern">
+                <option value="">Selecione ou digite abaixo...</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Adicionais">Adicionais</option>
+                <option value="Supra">Supra</option>
+                <option value="Original">Original</option>
+                <option value="Vita">Vita</option>
+                <option value="Vita Whey">Vita Whey</option>
+                <option value="Pardal Livre- Zero Lac">Pardal Livre- Zero Lac</option>
+                <option value="Clássicos">Clássicos</option>
+                <option value="Fun">Fun</option>
+                <option value="Fun Zero Lac">Fun Zero Lac</option>
+            </select>
+            <input id="prod-category" class="input-modern" placeholder="Nova Categoria (se não listada acima)">
+            <input id="prod-image" class="input-modern" placeholder="URL da Imagem">
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button id="close-prod-modal" class="btn-sec" style="flex:1;">Cancelar</button>
+                <button id="save-prod-btn" class="btn-main" style="flex:1; margin-top:0;">Salvar</button>
+            </div>
+            <button id="delete-prod-btn" class="btn-sec" style="width:100%; margin-top:10px; color:var(--danger); border-color:var(--danger); display:none;">Excluir Produto</button>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="details-title">Detalhes</h3>
+            <div id="details-content" style="max-height: 300px; overflow-y: auto; margin: 15px 0; border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 10px 0;"></div>
+            <div style="display:flex; gap:10px;">
+                 <button id="details-close-btn" class="btn-sec">Fechar</button>
+                 <button id="details-reprint-btn" class="btn-sec">🖨️ Reimprimir</button>
+                 <button id="details-delete-btn" class="btn-main" style="background:var(--danger); margin-top:0;">Excluir</button>
+            </div>
+        </div>
     </div>
 
     <div id="hold-sale-modal" class="modal-overlay">
         <div class="modal-box">
-            <div class="modal-header">Pendurar Comanda</div>
-            <input type="text" id="customer-name" class="input-modern" placeholder="Nome do Cliente / Mesa" style="margin-bottom: 10px;">
-            <select id="existing-order-select" class="input-modern" style="margin-bottom: 20px;"></select>
-            <div class="modal-actions">
+            <h3>Adicionar à Comanda</h3>
+            <label>Nova Comanda:</label>
+            <input type="text" id="customer-name" class="input-modern" placeholder="Nome do Cliente">
+            <div style="text-align:center; margin:10px 0;">OU</div>
+            <label>Adicionar em Existente:</label>
+            <select id="existing-order-select" class="input-modern"></select>
+            <div style="display:flex; gap:10px; margin-top:15px;">
                 <button id="close-hold-sale-btn" class="btn-sec">Cancelar</button>
-                <button id="save-hold-sale-btn" class="btn-main">Salvar</button>
+                <button id="save-hold-sale-btn" class="btn-main" style="margin-top:0;">Salvar</button>
             </div>
         </div>
     </div>
 
-    <div id="manual-sale-modal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 600px;">
-            <div class="modal-header">Venda Manual</div>
-            <select id="manual-product-select" class="input-modern" style="margin-bottom: 10px;"></select>
-            <div id="manual-acai-weight-section" style="display: none; margin-bottom: 10px;">
-                <input type="number" id="manual-acai-weight" class="input-modern" placeholder="Peso (gramas)">
-            </div>
-            <button id="manual-add-item-btn" class="btn-sec" style="width:100%; margin-bottom: 15px;">+ Adicionar Item</button>
-            <div id="manual-sale-cart-items" style="max-height: 150px; overflow-y: auto; background: #f9f9f9; padding: 10px; border-radius: 8px;"></div>
-            <div style="text-align: right; font-weight: bold; font-size: 1.2rem; margin: 10px 0;">Total: <span id="manual-sale-total">R$ 0.00</span></div>
-            <div class="payment-grid" id="manual-payment-options">
-                <div class="pay-opt" data-method="cash">💵</div><div class="pay-opt" data-method="card">💳</div><div class="pay-opt" data-method="pix">💠</div>
-            </div>
-            <div class="modal-actions">
-                <button id="close-manual-sale-btn" class="btn-sec">Fechar</button>
-                <button id="save-manual-sale-btn" class="btn-main">Concluir</button>
-            </div>
-        </div>
-    </div>
-    
     <div id="open-order-modal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 600px;">
-            <div class="modal-header" style="display: flex; justify-content: space-between;">
-                <span id="open-order-title">Comanda</span>
-                <span id="open-order-timer" style="font-size: 0.9rem; background: var(--danger); color: white; padding: 2px 8px; border-radius: 10px;">00:00</span>
-            </div>
-            <div id="open-order-items-list" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px dashed #ddd;"></div>
-            <div style="text-align: right; font-weight: bold; font-size: 1.4rem; color: var(--primary);">Total: <span id="open-order-total">R$ 0.00</span></div>
-            
-            <div style="margin-top: 15px;">
-                <div class="payment-grid" id="open-order-payment-options">
-                    <div class="pay-opt" data-method="cash">💵</div><div class="pay-opt" data-method="card">💳</div><div class="pay-opt" data-method="pix">💠</div>
-                </div>
-                <div id="open-order-cash-input" style="display: none;">
-                    <input type="number" id="open-order-cash-received" class="input-modern" placeholder="Recebido">
-                    <div>Troco: <span id="open-order-change-amount">0.00</span></div>
-                </div>
-            </div>
-
-            <div class="modal-actions">
-                <button id="close-open-order-btn" class="btn-sec">Voltar</button>
-                <button id="confirm-open-order-payment" class="btn-main">Receber</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="receipt-modal" class="modal-overlay">
         <div class="modal-box">
-             <div class="modal-header">Venda Realizada! ✅</div>
-             <div id="receipt-content" style="font-family: monospace; background: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 15px; max-height: 300px; overflow-y: auto;"></div>
-             <div class="modal-actions">
-                 <button id="close-receipt-btn" class="btn-sec">Fechar</button>
-                 <button id="print-receipt-btn" class="btn-main">Imprimir</button>
-             </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 id="open-order-title">Comanda</h3>
+                <span id="open-order-timer" class="badge">00:00</span>
+            </div>
+            <button id="add-cart-to-open-order-btn" class="btn-sec" style="width:100%; margin-bottom:15px; border:1px dashed var(--primary); color: var(--primary);">✏️ Editar / Adicionar Itens</button>
+            <div id="open-order-items-list" style="max-height: 200px; overflow-y: auto; border-bottom: 1px dashed #ddd; margin-bottom:15px;"></div>
+            <div style="text-align:right; font-size:1.4rem; color:var(--primary); font-weight:bold;">Total: <span id="open-order-total">R$ 0.00</span></div>
+            
+            <h4 style="margin-top:15px;">Pagamento</h4>
+            <div class="payment-grid" id="open-order-payment-options">
+                <div class="pay-opt" data-method="cash">💵 Dinheiro</div>
+                <div class="pay-opt" data-method="card">💳 Cartão</div>
+                <div class="pay-opt" data-method="pix">💠 PIX</div>
+            </div>
+            <div id="open-order-cash-input" style="display:none; margin-top:10px;">
+                <input type="number" id="oo-cash-received" class="input-modern" placeholder="Recebido">
+                <div style="text-align:right;">Troco: <span id="oo-change">0.00</span></div>
+            </div>
+            
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button id="close-open-order-btn" class="btn-sec">Fechar</button>
+                <button id="confirm-open-order-payment" class="btn-main" style="margin-top:0;">Receber / Finalizar</button>
+            </div>
+            
+            <button id="cancel-open-order-btn" class="btn-sec" style="width:100%; margin-top:15px; border-color:var(--danger); color:var(--danger);">🚫 Cancelar Comanda</button>
         </div>
     </div>
 
     <div id="password-modal" class="modal-overlay">
         <div class="modal-box">
-            <div class="modal-header">Senha de Gerente</div>
-            <input type="password" id="confirm-delete-password" class="input-modern" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
-            <div class="modal-actions">
-                <button id="cancel-delete" class="btn-sec">Cancelar</button>
-                <button id="confirm-delete" class="btn-main" style="background: var(--danger);">Confirmar</button>
+            <h3 id="password-modal-title">Senha Necessária</h3>
+            <input type="password" id="general-password-input" class="input-modern" style="text-align:center; font-size:1.5rem; letter-spacing:5px;" placeholder="****">
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button id="cancel-password-btn" class="btn-sec">Cancelar</button>
+                <button id="confirm-password-btn" class="btn-main" style="background:var(--primary); margin-top:0;">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <div id="global-loading" class="loading-overlay"><div class="spinner"></div></div>
+
+    <script type="module" src="./src/main.js"></script>
 </body>
 </html>
